@@ -1,13 +1,6 @@
 import numpy as np 
 import scipy.signal
 
-class board(object) :
-    def __init__(self) :           pass
-    def __hash__(self) :           pass
-    def __eq__(self,other) :       pass
-    def reset(self) :              pass
-    def play(self,player,action) : pass
-
 class player(object) :
     def __init__(self) : pass
     def playTurn(self, board) : pass
@@ -24,9 +17,9 @@ class game(object) :
     def playTurn(self) :
         player = self.player1 if self.player==1 else self.player2
         action = player.playTurn(self.player,board)
-        done,winner = self.board.play(self.player,action)
+        done,winner,legal = self.board.play(self.player,action)
         self.player = 2 if self.player==1 else 1
-        return done,winner
+        return done,winner,legal
 
     def playGame(self) :
         self.board.reset()
@@ -35,7 +28,7 @@ class game(object) :
             done,winner = self.playTurn()
         return winner
 
-class connect4board(board) :
+class board(object) :
     winCondition1 = np.array([[1,1,1,1]])
     winCondition2 = np.array([[1],[1],[1],[1]])
     winCondition3 = np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
@@ -63,6 +56,9 @@ class connect4board(board) :
 
     def __ne__(self,other) :
         return not self.__eq__(other)
+
+    def numpieces(self) :
+        return self.numpieces
 
     def play(self,player,action) :
         legal = self._move(player,action)
